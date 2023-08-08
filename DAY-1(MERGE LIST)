@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to merge two sorted arrays into a new sorted array
+int* merge(int arr1[], int size1, int arr2[], int size2, int* mergedSize) {
+    int* merged = (int*)malloc((size1 + size2) * sizeof(int));
+    int i = 0, j = 0, k = 0;
+
+    while (i < size1 && j < size2) {
+        if (arr1[i] < arr2[j]) {
+            merged[k] = arr1[i];
+            i++;
+        } else {
+            merged[k] = arr2[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < size1) {
+        merged[k] = arr1[i];
+        i++;
+        k++;
+    }
+
+    while (j < size2) {
+        merged[k] = arr2[j];
+        j++;
+        k++;
+    }
+
+    *mergedSize = k;
+    return merged;
+}
+
+int main() {
+    int arr1[] = {2, 4, 6, 8};
+    int size1 = sizeof(arr1) / sizeof(arr1[0]);
+
+    int arr2[] = {1, 3, 5, 7};
+    int size2 = sizeof(arr2) / sizeof(arr2[0]);
+
+    int mergedSize;
+    int* merged = merge(arr1, size1, arr2, size2, &mergedSize);
+
+    printf("Merged Array: ");
+    for (int i = 0; i < mergedSize; i++) {
+        printf("%d ", merged[i]);
+    }
+
+    free(merged); // Don't forget to free the allocated memory
+
+    return 0;
+}
