@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define a structure for each node in the linked list
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        exit(1);
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Structure for the stack
+struct Stack {
+    struct Node* top;
+};
+
+// Function to initialize the stack
+void initializeStack(struct Stack* stack) {
+    stack->top = NULL;
+}
+
+// Function to check if the stack is empty
+int isEmpty(struct Stack* stack) {
+    return (stack->top == NULL);
+}
+
+// Function to push an element onto the stack
+void push(struct Stack* stack, int value) {
+    struct Node* newNode = createNode(value);
+    newNode->next = stack->top;
+    stack->top = newNode;
+}
+
+// Function to pop an element from the stack
+int pop(struct Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack underflow.\n");
+        exit(1);
+    }
+    struct Node* temp = stack->top;
+    int poppedValue = temp->data;
+    stack->top = stack->top->next;
+    free(temp);
+    return poppedValue;
+}
+
+// Function to display the elements of the stack
+void display(struct Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack is empty.\n");
+        return;
+    }
+    struct Node* current = stack->top;
+    while (current != NULL) {
+        printf("%d ", current->data);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Stack myStack;
+    initializeStack(&myStack);
+
+    push(&myStack, 10);
+    push(&myStack, 20);
+    push(&myStack, 30);
+
+    printf("Stack elements: ");
+    display(&myStack);
+
+    printf("Popped element: %d\n", pop(&myStack));
+
+    printf("Stack elements after popping: ");
+    display(&myStack);
+
+    return 0;
+}
