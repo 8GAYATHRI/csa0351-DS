@@ -1,0 +1,41 @@
+int main(){
+    int pid,n,c,p,k,nbread;
+    char buf1[2], buf2[2];
+    int fd1[2], fd2[2];
+    pipe(fd1);
+    pipe(fd2);
+    pid=fork();
+    if(pid==0){
+        close(fd1[1]);
+        close(fd2[0]);
+        read(fd1[0],buf2,sizeof(int));
+        n = atoi(buf2);
+        for(int i = 0; i<n;i++){
+            nbread = read(fd1[0],buf2,sizeof(int));
+            sleep(3);
+            if(nbread == -1)
+            exit(1);
+            c = atoi(buf2);
+            c = c*2;
+            sprintf(buf2,"%d",c);
+            write(fd2[1],buf2, sizeof(int));
+        }
+        close(fd1[0]);
+        close(fd2[1]);
+    }
+    close(fd1[0]);
+    close(fd2[1]);
+    printf("Enter integer: ");
+    scanf("%d",&p);
+    sprintf(buf1,"%d",p);
+    write(fd1[1],buf1,sizeof(int));
+    sleep(3);
+    for(int i=0;i<n;i++){
+        sprintf(buf1,"%d",i);
+        write(fd1[1],buf1,sizeof(int));
+        read(fd2[0],buf1,sizeof(int));
+        printf("number is: %s",buf1);
+    }
+    close(fd1[1]);
+    close(fd2[0]);
+    wait(NULL);
